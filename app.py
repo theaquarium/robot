@@ -1,12 +1,16 @@
 from flask import Flask, render_template
 from robot import Robot
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static', static_folder='static')
 robot = Robot()
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+#@app.route('/static/<path:path>')
+#def send_static(path):
+#    return send_from_directory('static', path)
 
 @app.route('/api/command/<string:cmd>', methods=['GET'])
 def commands(cmd):
