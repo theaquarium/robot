@@ -1,83 +1,37 @@
+<!DOCTYPE html>
+<html>
 <head>
-<link rel="stylesheet" type="text/css" href="/static/css/styles.css">
-<style>
-i.stop {
-  width: 3rem;
-  height: 8rem;
-  border: solid black;
-  border-width: 0 1.5rem 0 1.5rem;
-  display: inline-block;
-  padding: 3px;
-}
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-i.arrow {
-  width: 6rem;
-  height: 6rem;
-  border: solid black;
-  border-width: 0 1.5rem 1.5rem 0;
-  display: inline-block;
-  padding: 3px;
-}
+  <title>Robot</title>
 
-.right {
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-.left {
-    transform: rotate(135deg);
-    -webkit-transform: rotate(135deg);
-}
+  <link rel="icon" href="static/images/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" media="screen" href="static/css/main.css" />
 
-.up {
-    transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
-}
-.up2 {
-    position: relative;
-    top: 3rem;
-}
-
-.down {
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-}
-.down2 {
-    position: relative;
-    top: -3rem;
-}
-</style>
-
-<script>
-function command(cmd) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open('GET', '/api/command/' + cmd, true);
-    xmlHttp.send(null);
-}
-</script>
+  <script src="https://unpkg.com/nipplejs@0.7.1/dist/nipplejs.min.js" defer></script>
+  <script src="static/js/main.js" defer></script>
 </head>
-
 <body>
-<table cellspacing=80px>
-	<tr>
-		<td colspan=3 align=center onclick="command('forward')">
-			<i class="arrow up up2"></i><br/>
-			<i class="arrow up"></i>
-		</td>
-	</tr>
-	<tr>
-		<td align=center onclick="command('left')">
-			<i class="arrow left"></i>
-		</td>
-		<td align=center onclick="command('stop')">
-			<i class="stop"></i>
-		</td>
-		<td align=center onclick="command('right')">
-			<i class="arrow right"></i>
-		</td>
-	</tr>
-		<td colspan=3 align=center onclick="command('back')">
-			<i class="arrow down"></i><br/>
-			<i class="arrow down down2"></i>
-		</td>
-</table>
+  <div class="buttons">
+    <div class="button up"><i class="arrow arrow-up"></i></div>
+    <div class="button down"><i class="arrow arrow-down"></i></div>
+    <div class="button left"><i class="arrow arrow-left"></i></div>
+    <div class="button right"><i class="arrow arrow-right"></i></div>
+  </div>
+  <div class="joystick hidden"></div>
+  <div class="toggle-container">
+      <span class="text">Buttons</span>
+      <div class="switchbox">
+          <label class="switch">
+              <input type="checkbox" name="switch-input"/>
+              <div></div>
+            </label>
+      </div>
+      <span class="text">Joystick</span>
+  </div>
+</body>
+</html>

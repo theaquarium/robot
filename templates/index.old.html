@@ -1,0 +1,82 @@
+<head>
+<style>
+i.stop {
+  width: 3rem;
+  height: 8rem;
+  border: solid black;
+  border-width: 0 1.5rem 0 1.5rem;
+  display: inline-block;
+  padding: 3px;
+}
+
+i.arrow {
+  width: 6rem;
+  height: 6rem;
+  border: solid black;
+  border-width: 0 1.5rem 1.5rem 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+.up2 {
+    position: relative;
+    top: 3rem;
+}
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+.down2 {
+    position: relative;
+    top: -3rem;
+}
+</style>
+
+<script>
+function command(cmd) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('GET', '/api/command/' + cmd, true);
+    xmlHttp.send(null);
+}
+</script>
+</head>
+
+<body>
+<table cellspacing=80px>
+	<tr>
+		<td colspan=3 align=center onclick="command('forward')">
+			<i class="arrow up up2"></i><br/>
+			<i class="arrow up"></i>
+		</td>
+	</tr>
+	<tr>
+		<td align=center onclick="command('left')">
+			<i class="arrow left"></i>
+		</td>
+		<td align=center onclick="command('stop')">
+			<i class="stop"></i>
+		</td>
+		<td align=center onclick="command('right')">
+			<i class="arrow right"></i>
+		</td>
+	</tr>
+		<td colspan=3 align=center onclick="command('back')">
+			<i class="arrow down"></i><br/>
+			<i class="arrow down down2"></i>
+		</td>
+</table>

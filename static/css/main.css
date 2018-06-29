@@ -1,3 +1,191 @@
+:root{
+  --switch-height: 5vh;
+  --switch-width: 10vh;
+  --switch-bottom: 1vh;
+  --distance-between: 1vh;
+  --font-size: 1.5vh;
+}
+
+/* Mobile Styles */
+@media only screen and (max-width: 400px) {
+  :root{
+    --button-size: 20vw;
+    --arrow-thickness: 4vw;
+  }
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 401px) and (max-width: 960px) {
+  :root{
+    --button-size: 20vw;
+    --arrow-thickness: 4vw;
+  }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 961px) {
+  :root{
+    --button-size: 20vh;
+    --arrow-thickness: 4vh;
+  }
+}
+
 body {
-  background-color: #00B0B0;
+  margin: 0;
+  background: linear-gradient(to bottom right, #382fbe, #9198e5);
+  width: 100vw;
+  height: 100vh;
+
+  font-family: 'Nunito', sans-serif;
+  font-size: var(--font-size);
+  color: #EEEEEE;
+}
+
+.joystick {
+  width: 100vw;
+  height: 100vh;
+
+  position: absolute;
+}
+
+.buttons {
+  --grid-item-size: calc(var(--button-size) + var(--distance-between));
+
+  width: 100vw;
+  height: 100vh;
+
+  position: absolute;
+
+  display: grid;
+  place-content: center;
+  place-items: center;
+  grid-template-columns: repeat(3, var(--grid-item-size));
+  grid-template-rows: repeat(3, var(--grid-item-size));
+}
+
+.button {
+  --quarter-distance-between: calc(var(--distance-between) / 4);
+
+  width: var(--button-size);
+  height: var(--button-size);
+  position: relative;
+
+  background: #FFF;
+  box-shadow: var(--quarter-distance-between) var(--quarter-distance-between) 0 var(--quarter-distance-between) rgba(0,0,0,0.5);
+  -webkit-box-shadow: var(--quarter-distance-between) var(--quarter-distance-between) 0 var(--quarter-distance-between) rgba(0,0,0,0.5);
+  -moz-box-shadow: var(--quarter-distance-between) var(--quarter-distance-between) 0 var(--quarter-distance-between) rgba(0,0,0,0.5);
+}
+
+.button:active, .button.button-active {
+  box-shadow: var(--quarter-distance-between) var(--quarter-distance-between) 0 var(--quarter-distance-between) rgba(0,0,0,0.75) inset;
+  -webkit-box-shadow: var(--quarter-distance-between) var(--quarter-distance-between) 0 var(--quarter-distance-between) rgba(0,0,0,0.75) inset;
+  -moz-box-shadow: var(--quarter-distance-between) var(--quarter-distance-between) 0 var(--quarter-distance-between) rgba(0,0,0,0.75) inset;
+}
+
+.up {
+  grid-column: 2 / span 1;
+  grid-row: 1 / span 1;
+}
+
+.down {
+  grid-column: 2 / span 1;
+  grid-row: 3 / span 1;
+}
+
+.left {
+  grid-column: 1 / span 1;
+  grid-row: 2 / span 1;
+}
+
+.right {
+  grid-column: 3 / span 1;
+  grid-row: 2 / span 1;
+}
+
+.hidden {
+  display: none;
+}
+
+.toggle-container {
+  position: absolute;
+  bottom: var(--switch-bottom);
+  left: 0;
+  right: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text {
+  padding: var(--distance-between);
+}
+
+.switchbox {
+  height: var(--switch-height);
+}
+
+/* Arrow Styles */
+.arrow {
+  border: solid #6564D2;
+  border-width: 0 var(--arrow-thickness) var(--arrow-thickness) 0;
+  display: inline-block;
+  padding: var(--arrow-thickness);
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  margin: auto;
+}
+
+.arrow-right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.arrow-left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.arrow-up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.arrow-down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+/* Switch by https://codepen.io/wilsonpage/pen/cxKEs */
+.switch input {
+  position: absolute;
+  opacity: 0;
+}
+
+.switch {
+  display: inline-block;
+  font-size: 20px; /* 1 */
+  height: var(--switch-height);
+  width: var(--switch-width);
+  background: rgba(0,0,0,0.3);
+  border-radius: var(--switch-height);
+}
+
+.switch div {
+  height: var(--switch-height);
+  width: var(--switch-height);
+  border-radius: var(--switch-height);
+  background: #FFF;
+  box-shadow: 0 0.1em 0.3em rgba(0,0,0,0.3);
+  -webkit-transition: all 300ms;
+     -moz-transition: all 300ms;
+          transition: all 300ms;
+}
+
+.switch input:checked + div {
+  -webkit-transform: translate3d(100%, 0, 0);
+     -moz-transform: translate3d(100%, 0, 0);
+          transform: translate3d(100%, 0, 0);
 }
