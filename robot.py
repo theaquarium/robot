@@ -2,12 +2,12 @@ from motor import Motor
 
 class Robot:
     def __init__(self):
-        self.motor_front_left = Motor(16, 12, 'front left')
-        self.motor_front_right = Motor(10, 8, 'front right')
-        self.motor_rear_left = Motor(18, 22, 'rear left')
-        self.motor_rear_right = Motor(24, 26, 'rear right')
-        self.pwr = .05
-        self.pwr_turn = .001
+        self.motor_front_left = Motor(35, 37, 'front left')
+        self.motor_front_right = Motor(29, 31, 'front right')
+        self.motor_rear_left = Motor(38, 40, 'rear left')
+        self.motor_rear_right = Motor(32, 36, 'rear right')
+        self.pwr = 1
+        self.pwr_turn = 1
 
     def forward(self):
         print('*** Going forward!')

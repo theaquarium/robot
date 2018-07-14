@@ -2,10 +2,11 @@ import RPi.GPIO as GPIO
 
 class Motor:
     PWM_MAX = 100
+    PWM_FREQ = 16000
     
-    def __init__(self, pwr_pin, dir_pin, name):
-        self.pwr_pin = pwr_pin
-        self.dir_pin = dir_pin
+    def __init__(self, pin1, pin2, name):
+        self.pin1 = pin1
+        self.pin2 = pin2
         self.name = name
         self.init()
         
@@ -15,32 +16,36 @@ class Motor:
         GPIO.setmode(GPIO.BOARD)
         GPIO.setwarnings(False)
         
-        GPIO.setup(self.dir_pin, GPIO.OUT)
-        GPIO.output(self.dir_pin, 0)
+        GPIO.setup(self.pin1, GPIO.OUT)
+        self.pin1pwm = GPIO.PWM(self.pin1, Motor.PWM_FREQ)
+        self.pin1pwm.start(0)
         
-        GPIO.setup(self.pwr_pin, GPIO.OUT)
-        self.PWM = GPIO.PWM(self.pwr_pin, 16000)
-        self.PWM.start(0)
+        GPIO.setup(self.pin2, GPIO.OUT)
+        self.pin2pwm = GPIO.PWM(self.pin2, Motor.PWM_FREQ)
+        self.pin2pwm.start(0)
+        
         self.set_power(0)
     
     
     def set_power(self, power_level):
-        if power_level < 0:  
+        speed = min(int(Motor.PWM_MAX * abs(power_level)), Motor.PWM_MAX)
+        if power_level < 0:
             # Reverse mode
-            GPIO.output(self.dir_pin, False)  
-        elif power_level > 0:  
-            # Forward mode  
-            GPIO.output(self.dir_pin, True)  
-        else:  
-            # Stop mode  
-            GPIO.output(self.dir_pin, False)  
-        self.power_level = int(Motor.PWM_MAX * abs(power_level))
-        if self.power_level > Motor.PWM_MAX:  
-            self.power_level = Motor.PWM_MAX  
-        self.PWM.ChangeDutyCycle(self.power_level)
-        print('------ set power for motor {} to {}'.format(self.name, self.power_level))
+            self.pin2pwm.ChangeDutyCycle(0)
+            self.pin1pwm.ChangeDutyCycle(speed)
+        elif power_level > 0:
+            # Forward mode
+            self.pin1pwm.ChangeDutyCycle(0)
+            self.pin2pwm.ChangeDutyCycle(speed)
+        else:
+            # Stop mode
+            self.pin2pwm.ChangeDutyCycle(0)
+            self.pin1pwm.ChangeDutyCycle(0)
+
+        print('------ set power for motor {} to {}'.format(self.name, power_level))
 
         
     def cleanup(self):
-        GPIO.output(self.dir_pin, 0)
+        self.pin1pwm.ChangeDutyCycle(0)
+        self.pin2pwm.ChangeDutyCycle(0)
         GPIO.cleanup()
