@@ -1,5 +1,9 @@
-import RPi.GPIO as GPIO
-
+try:
+    import RPi.GPIO as GPIO
+except ImportError:
+    # Fall back to the emulator
+    from rpi_gpio_emulator import RPi_GPIO_emulator as GPIO
+    
 class Motor:
     PWM_MAX = 100
     PWM_FREQ = 16000

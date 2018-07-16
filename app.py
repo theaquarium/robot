@@ -1,3 +1,4 @@
+import sys
 from flask import Flask, render_template
 from robot import Robot
 
@@ -21,4 +22,7 @@ def commands(cmd):
     return '';
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=80)
+    port = 80
+    if len(sys.argv) > 1:
+        port = int(sys.argv[1])
+    app.run(debug=True, host='0.0.0.0', port=port)
