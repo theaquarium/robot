@@ -9,8 +9,11 @@ class Robot:
         self.pwr = 1
         self.pwr_turn = 1
 
+    def __log_command__(self, cmd):
+        print('*** ' + cmd)
+
     def forward(self):
-        print('*** Going forward!')
+        __log_command__('forward')
 
         self.motor_front_left.set_power(self.pwr)
         self.motor_front_right.set_power(self.pwr)
@@ -19,7 +22,7 @@ class Robot:
         self.motor_rear_right.set_power(self.pwr)
 
     def back(self):
-        print('*** Going back!')
+        __log_command__('back')
 
         self.motor_front_left.set_power(-self.pwr)
         self.motor_front_right.set_power(-self.pwr)
@@ -28,7 +31,7 @@ class Robot:
         self.motor_rear_right.set_power(-self.pwr)
 
     def left(self):
-        print('*** Turning left!')
+        __log_command__('left')
 
         self.motor_front_left.set_power(-self.pwr_turn)
         self.motor_front_right.set_power(self.pwr_turn)
@@ -37,7 +40,7 @@ class Robot:
         self.motor_rear_right.set_power(self.pwr_turn)
 
     def right(self):
-        print('*** Turning right!')
+        __log_command__('right')
 
         self.motor_front_left.set_power(self.pwr_turn)
         self.motor_front_right.set_power(-self.pwr_turn)
@@ -46,7 +49,7 @@ class Robot:
         self.motor_rear_right.set_power(-self.pwr_turn)
 
     def stop(self):
-        print('*** Stopping!')
+        __log_command__('stop')
 
         self.motor_front_left.set_power(0)
         self.motor_front_right.set_power(0)
