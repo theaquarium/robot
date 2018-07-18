@@ -15,7 +15,7 @@ def index():
 
 @app.route('/api/command/<string:cmd>', methods=['GET'])
 def commands(cmd):
-    print('=== Received command: {}'.format(cmd));
+    print('- {}: Received command: {}'.format('App', cmd));
     mth = getattr(robot, cmd, '')
     if mth != '':
         mth()
