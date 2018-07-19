@@ -14,12 +14,17 @@ def index():
 #    return send_from_directory('static', path)
 
 @app.route('/api/command/<string:cmd>', methods=['GET'])
-def commands(cmd):
+def command(cmd):
     print('- {}: Received command: {}'.format('App', cmd));
     mth = getattr(robot, cmd, '')
     if mth != '':
         mth()
     return '';
+
+@app.route('/api/motions/', methods=['GET'])
+def motions():
+    motions = robot.get_motions()
+    return '---'.join([str(m) for m in motions])
 
 if __name__ == '__main__':
     port = 80

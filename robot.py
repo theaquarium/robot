@@ -1,5 +1,14 @@
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 from motor import Motor
 from motion import Motion
+
+Base = declarative_base()
+engine = create_engine('sqlite:///robot.db')
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
 
 class Robot:
     def __init__(self):
@@ -13,6 +22,10 @@ class Robot:
     def __log_command__(self, cmd):
         motion = Motion(cmd)
         print('- {}: {}'.format(self.__class__.__name__, motion))
+
+        session = DBSession()
+        session.add(motion)
+        session.commit()
 
     def forward(self):
         self.__log_command__('forward')
@@ -58,3 +71,8 @@ class Robot:
 
         self.motor_rear_left.set_power(0)
         self.motor_rear_right.set_power(0)
+
+    def get_motions(self):
+        session = DBSession()
+        motions = session.query(Motion).all()
+        return motions

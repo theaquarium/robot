@@ -19,6 +19,19 @@ function command(cmd) {
     }
 }
 
+// Get Motions Function
+function get_motions() {
+    const xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var motions = xmlHttp.responseText;
+            document.getElementById('motions').innerHTML = motions;
+        }
+    };
+    xmlHttp.open('GET', '/api/motions/', true);
+    xmlHttp.send(null);
+}
+
 // Add Active Class To Button
 function activeButton(buttonClass) {
     document.querySelector('.' + buttonClass).classList.add('button-active');
@@ -74,7 +87,7 @@ function activateJoystick() {
         position: {left: '50%', top: '50%'},
         restOpacity: 0.8,
     });
-    
+
     manager.on('dir', (event, data) => {
         const direction = data.direction.angle;
         command(directionMap[direction]);
@@ -128,3 +141,9 @@ document.querySelector('input[name=switch-input]').addEventListener('change', fu
 
 // Activate Buttons
 activateButtons();
+
+
+setInterval(function () {
+    console.log('--- get_motions');
+    get_motions();
+}, 3000);

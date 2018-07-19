@@ -1,8 +1,8 @@
 try:
     import RPi.GPIO as GPIO
 except ImportError:
-    # Fall back to the emulator
-    from rpi_gpio_emulator import RPi_GPIO_emulator as GPIO
+    # Fall back to the mock
+    from rpi_gpio_mock import RPi_GPIO_mock as GPIO
 
 class Motor:
     PWM_MAX = 100
