@@ -1,4 +1,5 @@
 import sys
+import json
 from flask import Flask, render_template
 from robot import Robot
 
@@ -8,10 +9,6 @@ robot = Robot()
 @app.route('/')
 def index():
     return render_template('index.html')
-
-#@app.route('/static/<path:path>')
-#def send_static(path):
-#    return send_from_directory('static', path)
 
 @app.route('/api/command/<string:cmd>', methods=['GET'])
 def command(cmd):
@@ -24,7 +21,7 @@ def command(cmd):
 @app.route('/api/motions/', methods=['GET'])
 def motions():
     motions = robot.get_motions()
-    return '---'.join([str(m) for m in motions])
+    return json.dumps(motions)
 
 if __name__ == '__main__':
     port = 80

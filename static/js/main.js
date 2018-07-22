@@ -20,7 +20,7 @@ function command(cmd) {
 }
 
 // Get Motions Function
-function get_motions() {
+function show_motions() {
     const xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -144,6 +144,5 @@ activateButtons();
 
 
 setInterval(function () {
-    console.log('--- get_motions');
-    get_motions();
+    show_motions();
 }, 3000);

@@ -1,6 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.state import InstanceState
 
 from motor import Motor
 from motion import Motion
@@ -75,4 +76,5 @@ class Robot:
     def get_motions(self):
         session = DBSession()
         motions = session.query(Motion).all()
-        return motions
+        motions_serializeable = [{k: str(v) for k, v in m.__dict__.items() if k != '_sa_instance_state'} for m in motions]
+        return motions_serializeable
