@@ -9,7 +9,7 @@ let manager;
 let lastCommand;
 
 // Send Command Function
-function command(cmd) {
+function sendCommand(cmd) {
     if (cmd && cmd != lastCommand) {
         console.log(cmd);
         const xmlHttp = new XMLHttpRequest();
@@ -17,19 +17,6 @@ function command(cmd) {
         xmlHttp.send(null);
         lastCommand = cmd;
     }
-}
-
-// Get Motions Function
-function show_motions() {
-    const xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var motions = xmlHttp.responseText;
-            document.getElementById('motions').innerHTML = motions;
-        }
-    };
-    xmlHttp.open('GET', '/api/motions/', true);
-    xmlHttp.send(null);
 }
 
 // Add Active Class To Button
@@ -44,36 +31,36 @@ function buttonMouseDown() {
     for(let className of classes) {
         if (className != 'button') direction = className;
     }
-    command(directionMap[direction]);
+    sendCommand(directionMap[direction]);
 }
 
 function buttonMouseUp() {
-    command('stop');
+    sendCommand('stop');
 }
 
 function buttonKeyDown(event) {
     switch(event.key) {
         case 'ArrowUp':
-            command('forward');
+            sendCommand('forward');
             activeButton('up');
             break;
         case 'ArrowDown':
-            command('back');
+            sendCommand('back');
             activeButton('down');
             break;
         case 'ArrowLeft':
-            command('left');
+            sendCommand('left');
             activeButton('left');
             break;
         case 'ArrowRight':
-            command('right');
+            sendCommand('right');
             activeButton('right');
             break;
     }
 }
 
 function buttonKeyUp() {
-    command('stop');
+    sendCommand('stop');
     document.querySelectorAll('.button-active').forEach(el => {
         el.classList.remove('button-active');
     });
@@ -90,9 +77,9 @@ function activateJoystick() {
 
     manager.on('dir', (event, data) => {
         const direction = data.direction.angle;
-        command(directionMap[direction]);
+        sendCommand(directionMap[direction]);
     }).on('end', event => {
-        command('stop');
+        sendCommand('stop');
     });
 }
 
@@ -142,7 +129,40 @@ document.querySelector('input[name=switch-input]').addEventListener('change', fu
 // Activate Buttons
 activateButtons();
 
+// Get Motions Function
+function showMotions() {
+    const xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let trajectory = JSON.parse(xmlHttp.responseText).path;
+            let points = '';
+
+            const svgElement = document.querySelector('#trajectory>svg');
+
+            trajectory.forEach(point => {
+                const calculatedLocation = point;
+                points += calculatedLocation[0] +
+                    ',' +
+                    calculatedLocation[1] +
+                    ' ';
+
+            command = 'L';
+            });
+
+            document.getElementById('trajectory_path').setAttribute('points', points);
+        }
+    };
+    xmlHttp.open('GET', '/api/trajectory/', true);
+    xmlHttp.send(null);
+}
+
+function computedPosition(svgElement, point) {
+    return [
+        (svgElement.clientHeight / 2) + point[0],
+        (svgElement.clientWidth / 2) + point[1],
+    ];
+}
 
 setInterval(function () {
-    show_motions();
+    showMotions();
 }, 3000);

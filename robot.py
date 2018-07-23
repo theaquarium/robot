@@ -1,18 +1,13 @@
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm.state import InstanceState
+import math
 
 from motor import Motor
-from motion import Motion
-
-Base = declarative_base()
-engine = create_engine('sqlite:///robot.db')
-Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
+from command import Command
+from motion_logger import MotionLogger
 
 class Robot:
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
+
         self.motor_front_left = Motor(35, 37, 'front left')
         self.motor_front_right = Motor(29, 31, 'front right')
         self.motor_rear_left = Motor(38, 40, 'rear left')
@@ -20,16 +15,12 @@ class Robot:
         self.pwr = 1
         self.pwr_turn = 1
 
-    def __log_command__(self, cmd):
-        motion = Motion(cmd)
-        print('- {}: {}'.format(self.__class__.__name__, motion))
+        self.logger = MotionLogger(self.name)
 
-        session = DBSession()
-        session.add(motion)
-        session.commit()
+        self.logger.log('start')
 
     def forward(self):
-        self.__log_command__('forward')
+        self.logger.log('forward')
 
         self.motor_front_left.set_power(self.pwr)
         self.motor_front_right.set_power(self.pwr)
@@ -38,7 +29,7 @@ class Robot:
         self.motor_rear_right.set_power(self.pwr)
 
     def back(self):
-        self.__log_command__('back')
+        self.logger.log('back')
 
         self.motor_front_left.set_power(-self.pwr)
         self.motor_front_right.set_power(-self.pwr)
@@ -47,7 +38,7 @@ class Robot:
         self.motor_rear_right.set_power(-self.pwr)
 
     def left(self):
-        self.__log_command__('left')
+        self.logger.log('left')
 
         self.motor_front_left.set_power(-self.pwr_turn)
         self.motor_front_right.set_power(self.pwr_turn)
@@ -56,7 +47,7 @@ class Robot:
         self.motor_rear_right.set_power(self.pwr_turn)
 
     def right(self):
-        self.__log_command__('right')
+        self.logger.log('right')
 
         self.motor_front_left.set_power(self.pwr_turn)
         self.motor_front_right.set_power(-self.pwr_turn)
@@ -65,7 +56,7 @@ class Robot:
         self.motor_rear_right.set_power(-self.pwr_turn)
 
     def stop(self):
-        self.__log_command__('stop')
+        self.logger.log('stop')
 
         self.motor_front_left.set_power(0)
         self.motor_front_right.set_power(0)
@@ -73,8 +64,43 @@ class Robot:
         self.motor_rear_left.set_power(0)
         self.motor_rear_right.set_power(0)
 
-    def get_motions(self):
-        session = DBSession()
-        motions = session.query(Motion).all()
-        motions_serializeable = [{k: str(v) for k, v in m.__dict__.items() if k != '_sa_instance_state'} for m in motions]
-        return motions_serializeable
+    def get_trajectory(self):
+        _max_duration = 10  # 10 sec
+        _speed_right = 45   # deg/sec
+        _speed_left = 30    # deg/sec
+        _speed_forward = 1  # m/sec
+        _speed_backward = 1 # m/sec
+
+        pos = (0, 0)
+        angle = 0
+        path = [pos]
+
+        motions = self.logger.get_commands()
+
+        for i in range(len(motions)):
+            m = motions[i]
+            duration = (motions[i + 1].timestamp - m.timestamp).total_seconds() if i < (len(motions) - 1) else _max_duration
+
+            if m.type == 'stop':
+                continue
+            if m.type == 'left':
+                angle = angle - _speed_left * duration
+            if m.type == 'right':
+                angle = angle + _speed_right * duration
+            if m.type == 'forward':
+                distance = _speed_forward * duration
+                pos_x = pos[0] + distance * math.cos(math.radians(angle))
+                pos_y = pos[1] + distance * math.sin(math.radians(angle))
+                pos = (pos_x, pos_y)
+                path.append(pos)
+            if m.type == 'backward':
+                distance = _speed_backward * duration
+                pos_x = pos[0] - distance * math.cos(math.radians(angle))
+                pos_y = pos[1] - distance * math.sin(math.radians(angle))
+                pos = (pos_x, pos_y)
+                path.append(pos)
+
+        return {
+            'path': path,
+            'direction': angle
+        }

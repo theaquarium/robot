@@ -16,23 +16,30 @@
   <script src="static/js/main.js" defer></script>
 </head>
 <body>
-  <div class="buttons">
-    <div class="button up"><i class="arrow arrow-up"></i></div>
-    <div class="button down"><i class="arrow arrow-down"></i></div>
-    <div class="button left"><i class="arrow arrow-left"></i></div>
-    <div class="button right"><i class="arrow arrow-right"></i></div>
-  </div>
-  <div class="joystick hidden"></div>
-  <div class="toggle-container">
-      <span class="text">Buttons</span>
-      <div class="switchbox">
-          <label class="switch">
-              <input type="checkbox" name="switch-input"/>
-              <div></div>
-            </label>
+  <div class="controls">
+      <div class="buttons">
+        <div class="button up"><i class="arrow arrow-up"></i></div>
+        <div class="button down"><i class="arrow arrow-down"></i></div>
+        <div class="button left"><i class="arrow arrow-left"></i></div>
+        <div class="button right"><i class="arrow arrow-right"></i></div>
       </div>
-      <span class="text">Joystick</span>
+      <div class="joystick hidden"></div>
+      <div class="toggle-container">
+          <span class="text">Buttons</span>
+          <div class="switchbox">
+              <label class="switch">
+                  <input type="checkbox" name="switch-input"/>
+                  <div></div>
+                </label>
+          </div>
+          <span class="text">Joystick</span>
+      </div>
   </div>
-  <div id="motions" class="motions" style="zdisplay:none"></div>
+  <div class="divider"></div>
+  <div id="trajectory" class="trajectory">
+    <svg viewBox="-50 -50 100 100">
+        <polyline id="trajectory_path" points="" />
+    </svg>
+  </div>
 </body>
 </html>

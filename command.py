@@ -7,8 +7,9 @@ from sqlalchemy.dialects.sqlite import DATETIME
 
 Base = declarative_base()
 
-class Motion(Base):
-    __tablename__ = 'motion'
+class Command(Base):
+    __tablename__ = 'commands'
+
     id = Column(Integer, primary_key=True)
     timestamp = Column(DATETIME, nullable=False)
     type = Column(String(250), nullable=False)
@@ -18,7 +19,7 @@ class Motion(Base):
         self.type = type
 
     def __repr__(self):
-        return '{}: {}'.format(self.timestamp, self.type)
+        return '<{} {}: {}>'.format(self.__class__.__name__, self.type, self.timestamp)
 
 engine = create_engine('sqlite:///robot.db')
 Base.metadata.create_all(engine)

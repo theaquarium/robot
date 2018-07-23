@@ -4,7 +4,7 @@ from flask import Flask, render_template
 from robot import Robot
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
-robot = Robot()
+robot = Robot('robot')
 
 @app.route('/')
 def index():
@@ -18,10 +18,10 @@ def command(cmd):
         mth()
     return '';
 
-@app.route('/api/motions/', methods=['GET'])
-def motions():
-    motions = robot.get_motions()
-    return json.dumps(motions)
+@app.route('/api/trajectory/', methods=['GET'])
+def trajectory():
+    trajectory = robot.get_trajectory()
+    return json.dumps(trajectory)
 
 if __name__ == '__main__':
     port = 80

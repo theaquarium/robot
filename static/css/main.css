@@ -34,17 +34,54 @@ body {
   margin: 0;
   background: linear-gradient(to bottom right, #382fbe, #9198e5);
   width: 100vw;
-  height: 100vh;
+  height: fit-content;
 
   font-family: 'Nunito', sans-serif;
   font-size: var(--font-size);
   color: #EEEEEE;
 }
 
+.divider {
+    --vertical-margin: 4vh;
+
+    width: 80%;
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.2);
+    position: relative;
+
+    right: 0;
+    left: 0;
+    margin: var(--vertical-margin) auto;
+}
+
+.controls {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+}
+.trajectory {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+}
+.trajectory > svg {
+    height: 100%;
+    width: auto;
+
+    position: absolute;
+    left: 0; right: 0;
+    margin: auto;
+}
+
+.trajectory > svg > polyline {
+    fill:none;
+    stroke:black;
+    stroke-width: 0.5;
+}
+
 .joystick {
   width: 100vw;
-  height: 100vh;
-
+  height: 100%;
   position: absolute;
 }
 
@@ -52,7 +89,7 @@ body {
   --grid-item-size: calc(var(--button-size) + var(--distance-between));
 
   width: 100vw;
-  height: 100vh;
+  height: 100%;
 
   position: absolute;
 
