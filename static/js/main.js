@@ -11,7 +11,7 @@ let lastCommand;
 // Send Command Function
 function sendCommand(cmd) {
     if (cmd && cmd != lastCommand) {
-        console.log(cmd);
+        //console.log(cmd);
         const xmlHttp = new XMLHttpRequest();
         xmlHttp.open('GET', '/api/command/' + cmd, true);
         xmlHttp.send(null);
@@ -134,35 +134,56 @@ function showMotions() {
     const xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            let trajectory = JSON.parse(xmlHttp.responseText).path;
-            let points = '';
+            let response = JSON.parse(xmlHttp.responseText);
+            let trajectory = response.path;
+            let angle = response.direction;
 
-            const svgElement = document.querySelector('#trajectory>svg');
-
+            let boundaries = [Infinity, Infinity, -Infinity, -Infinity]; // left, top, right, bottom
             trajectory.forEach(point => {
-                const calculatedLocation = point;
-                points += calculatedLocation[0] +
-                    ',' +
-                    calculatedLocation[1] +
-                    ' ';
-
-            command = 'L';
+                // compute the boundaries to scale the trajectory
+                boundaries[0] = Math.min(boundaries[0].toFixed(6), point[0]);
+                boundaries[2] = Math.max(boundaries[2].toFixed(6), point[0]);
+                boundaries[1] = Math.min(boundaries[1].toFixed(6), point[1]);
+                boundaries[3] = Math.max(boundaries[3].toFixed(6), point[1]);
             });
 
-            document.getElementById('trajectory_path').setAttribute('points', points);
+            const svgElement = document.querySelector('#trajectory>svg');
+            let scale = Math.min(
+                svgElement.clientWidth * 0.9 / (boundaries[2] - boundaries[0]),
+                svgElement.clientHeight * 0.9 / (boundaries[3] - boundaries[1])
+            );
+            let offset = [
+                svgElement.clientWidth * 0.05 - boundaries[0] * scale,
+                svgElement.clientHeight * 0.05 - boundaries[1] * scale
+            ]
+
+            let points = '';
+            let last_point = [0, 0];
+            trajectory.forEach(point => {
+                let pt = computePosition(point, scale, offset);
+                points += pt[0] + ',' + pt[1] + ' ';
+
+                // remember the last point to draw the arrow
+                last_point = pt;
+            });
+
+            document.getElementById('trajectory_path').setAttribute('points', points)
+
+            let transform = 'translate(' + (last_point[0] - 6) + ',' + last_point[1] + ') rotate(' + (angle + 90) + ' 6 0)'
+            document.getElementById('trajectory_pointer').setAttribute('transform', transform);
         }
     };
     xmlHttp.open('GET', '/api/trajectory/', true);
     xmlHttp.send(null);
 }
 
-function computedPosition(svgElement, point) {
+function computePosition(point, scale, offset) {
     return [
-        (svgElement.clientHeight / 2) + point[0],
-        (svgElement.clientWidth / 2) + point[1],
+        point[0] * scale + offset[0],
+        point[1] * scale + offset[1]
     ];
 }
 
 setInterval(function () {
     showMotions();
-}, 3000);
+}, 1000);

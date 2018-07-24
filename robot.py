@@ -66,6 +66,7 @@ class Robot:
 
     def get_trajectory(self):
         _max_duration = 10  # 10 sec
+        _max_duration = 0   # ignore
         _speed_right = 45   # deg/sec
         _speed_left = 30    # deg/sec
         _speed_forward = 1  # m/sec
