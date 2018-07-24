@@ -138,15 +138,16 @@ function showMotions() {
             let trajectory = response.path;
             let angle = response.direction;
 
+            // compute the boundaries to scale the trajectory
             let boundaries = [Infinity, Infinity, -Infinity, -Infinity]; // left, top, right, bottom
             trajectory.forEach(point => {
-                // compute the boundaries to scale the trajectory
                 boundaries[0] = Math.min(boundaries[0].toFixed(6), point[0]);
                 boundaries[2] = Math.max(boundaries[2].toFixed(6), point[0]);
                 boundaries[1] = Math.min(boundaries[1].toFixed(6), point[1]);
                 boundaries[3] = Math.max(boundaries[3].toFixed(6), point[1]);
             });
 
+            // compute the scaleing factors
             const svgElement = document.querySelector('#trajectory>svg');
             let scale = Math.min(
                 svgElement.clientWidth * 0.9 / (boundaries[2] - boundaries[0]),
@@ -157,6 +158,7 @@ function showMotions() {
                 svgElement.clientHeight * 0.05 - boundaries[1] * scale
             ]
 
+            // scale the trajectory
             let points = '';
             let last_point = [0, 0];
             trajectory.forEach(point => {
@@ -167,8 +169,10 @@ function showMotions() {
                 last_point = pt;
             });
 
+            // draw the trajectory
             document.getElementById('trajectory_path').setAttribute('points', points)
 
+            // draw the pointer
             let transform = 'translate(' + (last_point[0] - 6) + ',' + last_point[1] + ') rotate(' + (angle + 90) + ' 6 0)'
             document.getElementById('trajectory_pointer').setAttribute('transform', transform);
         }
