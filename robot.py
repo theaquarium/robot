@@ -94,7 +94,7 @@ class Robot:
                 pos_y = pos[1] + distance * math.sin(math.radians(angle))
                 pos = (pos_x, pos_y)
                 path.append(pos)
-            if m.type == 'backward':
+            if m.type == 'back':
                 distance = _speed_backward * duration
                 pos_x = pos[0] - distance * math.cos(math.radians(angle))
                 pos_y = pos[1] - distance * math.sin(math.radians(angle))

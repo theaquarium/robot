@@ -19,6 +19,21 @@ function sendCommand(cmd) {
     }
 }
 
+function sendCommandDelayed(cmd, delay) {
+    setTimeout(function () {
+        sendCommand(cmd);
+    }, delay);
+}
+
+function sendSequence(lst) {
+    let d = 0;
+    lst.forEach(function (cmd) {
+        sendCommandDelayed(cmd[0], d);
+        d += cmd[1];
+    });
+    sendCommandDelayed('stop', d);
+}
+
 // Add Active Class To Button
 function activeButton(buttonClass) {
     document.querySelector('.' + buttonClass).classList.add('button-active');
@@ -129,6 +144,24 @@ document.querySelector('input[name=switch-input]').addEventListener('change', fu
 // Activate Buttons
 activateButtons();
 
+document.querySelector('#make_square').addEventListener('click', function() {
+    let square = [];
+    for (let i = 0; i < 4; i++) {
+        square.push(['forward', 1000]);
+        square.push(['right', 2000]);
+    }
+    sendSequence(square);
+});
+
+document.querySelector('#make_circle').addEventListener('click', function() {
+    let circle = [];
+    for (let i = 0; i < 32; i++) {
+        circle.push(['forward', 250]);
+        circle.push(['right', 250]);
+    }
+    sendSequence(circle);
+});
+
 // Get Motions Function
 function showMotions() {
     const xmlHttp = new XMLHttpRequest();
@@ -146,6 +179,12 @@ function showMotions() {
                 boundaries[1] = Math.min(boundaries[1].toFixed(6), point[1]);
                 boundaries[3] = Math.max(boundaries[3].toFixed(6), point[1]);
             });
+            if (boundaries[2] === boundaries[0]) {
+                boundaries[2] = boundaries[0] + 1;
+            }
+            if (boundaries[3] === boundaries[1]) {
+                boundaries[3] = boundaries[1] + 1;
+            }
 
             // compute the scaleing factors
             const svgElement = document.querySelector('#trajectory>svg');
