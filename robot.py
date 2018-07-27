@@ -65,12 +65,11 @@ class Robot:
         self.motor_rear_right.set_power(0)
 
     def get_trajectory(self):
-        _max_duration = 10  # 10 sec
-        _max_duration = 0   # ignore
-        _speed_right = 45   # deg/sec
-        _speed_left = 30    # deg/sec
-        _speed_forward = 1  # m/sec
-        _speed_backward = 1 # m/sec
+        _max_duration = 0;      # ignore
+        _speed_right = 90;      # deg/sec
+        _speed_left = 60;       # deg/sec
+        _speed_forward = 30 * 25.4 / 1000;      # m/sec
+        _speed_backward = 30 * 25.4 / 1000;     # m/sec
 
         pos = (0, 0)
         angle = 0
