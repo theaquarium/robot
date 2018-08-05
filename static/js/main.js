@@ -21,6 +21,7 @@ function sendCommand(cmd) {
 
 function sendCommandDelayed(cmd, delay) {
     setTimeout(function () {
+        sendCommand('stop');
         sendCommand(cmd);
     }, delay);
 }
@@ -148,7 +149,7 @@ document.querySelector('#make_square').addEventListener('click', function() {
     let square = [];
     for (let i = 0; i < 4; i++) {
         square.push(['forward', 1000]);
-        square.push(['right', 2000]);
+        square.push(['right', 1000]);
     }
     sendSequence(square);
 });
@@ -157,9 +158,16 @@ document.querySelector('#make_circle').addEventListener('click', function() {
     let circle = [];
     for (let i = 0; i < 32; i++) {
         circle.push(['forward', 250]);
-        circle.push(['right', 250]);
+        circle.push(['right', 125]);
     }
     sendSequence(circle);
+});
+
+document.querySelector('#one_sec_test').addEventListener('click', function() {
+    let sequence = [
+        ['right', 1000]
+    ];
+    sendSequence(sequence);
 });
 
 // Get Motions Function
