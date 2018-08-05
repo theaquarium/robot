@@ -11,7 +11,7 @@ let lastCommand;
 // Send Command Function
 function sendCommand(cmd) {
     if (cmd && cmd != lastCommand) {
-        //console.log(cmd);
+        console.log(cmd);
         const xmlHttp = new XMLHttpRequest();
         xmlHttp.open('GET', '/api/command/' + cmd, true);
         xmlHttp.send(null);
@@ -19,20 +19,19 @@ function sendCommand(cmd) {
     }
 }
 
-function sendCommandDelayed(cmd, delay) {
-    setTimeout(function () {
-        sendCommand('stop');
-        sendCommand(cmd);
-    }, delay);
-}
-
 function sendSequence(lst) {
-    let d = 0;
-    lst.forEach(function (cmd) {
-        sendCommandDelayed(cmd[0], d);
-        d += cmd[1];
+    var result = Promise.resolve();
+    lst.forEach(cmd => {
+        result = result.then(() => {
+            return new Promise(function (resolve) {
+                sendCommand(cmd[0]);
+                setTimeout(() => {
+                    sendCommand('stop');
+                    resolve();
+                }, cmd[1]);
+            });
+        });
     });
-    sendCommandDelayed('stop', d);
 }
 
 // Add Active Class To Button
@@ -222,6 +221,11 @@ function showMotions() {
             // draw the pointer
             let transform = 'translate(' + (last_point[0] - 6) + ',' + last_point[1] + ') rotate(' + (angle + 90) + ' 6 0)'
             document.getElementById('trajectory_pointer').setAttribute('transform', transform);
+
+            // draw the scale
+            let scaleLength = scale;
+            let scalePoints = '0,0 0,6 0,3 ' + scaleLength + ',3 ' + scaleLength + ',0 ' + scaleLength + ',6';
+            document.getElementById('scale').setAttribute('points', scalePoints)
         }
     };
     xmlHttp.open('GET', '/api/trajectory/', true);
