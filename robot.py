@@ -2,6 +2,7 @@ import math
 
 from motor import Motor
 from command import Command
+from vicinity_monitor import VicinityMonitor
 from motion_logger import MotionLogger
 
 class Robot:

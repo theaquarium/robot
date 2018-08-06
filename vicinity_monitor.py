@@ -28,7 +28,7 @@ class VicinityMonitor(threading.Thread):
                         result_list.append(round(sonar_result, 1))
                 print(result_list)
                 result_list = []
-            except Queue.Empty:
+            except:
                 continue
 
     def join(self, timeout=None):
