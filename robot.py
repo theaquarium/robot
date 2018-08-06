@@ -15,6 +15,9 @@ class Robot:
         self.pwr = 1
         self.pwr_turn = 1
 
+        self.vicinity_monitor = VicinityMonitor()
+        self.vicinity_monitor.start()
+
         self.logger = MotionLogger(self.name)
 
         self.logger.log('start')
